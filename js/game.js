@@ -903,7 +903,7 @@ this.server = new Server(null,'player',
 
 Game.prototype.sendCarDetails = function(car){
 	var now = new Date().getTime();
-	if(now - this.lastServerUpdate > 300){ //don't update more often than a threashold
+	if(now - this.lastServerUpdate > 100){ //don't update more often than a threashold
 		this.server.update({
 			pos: car.body.GetPosition(),
 			power: car.power,
