@@ -77,7 +77,7 @@ Wheel.prototype.createbody = function(world) {
 
 }
 
-// Wheel.prototype.draw = function(params) {
+Wheel.prototype.draw = function(params) {
 //   params.ctx.save();
 //   params.ctx.translate(this.x * SCALE, this.y * SCALE);
 //   params.ctx.rotate(this.angle);
@@ -90,7 +90,7 @@ Wheel.prototype.createbody = function(world) {
 //   params.ctx.restore();
   
 //   RectangleEntity.prototype.draw.call(this, params);
-// };
+};
 
 // Wheel.prototype.getLocalVelocity=function(){
 //     /*returns get velocity vector relative to car
@@ -170,6 +170,13 @@ function Car(params){
       wheeldef.angle = params.angle;
       this.wheels.push(new Wheel(wheeldef));
   }
+
+  this.currentspriteset = ['carRotate01', 'carRotate02', 'carRotate03', 'carRotate04', 'carRotate05', 'carRotate06', 'carRotate07', 
+    'carRotate08', 'carRotate09', 'carRotate10', 'carRotate11', 'carRotate12', 'carRotate13', 'carRotate14', 
+    'carRotate15', 'carRotate16' ];
+
+  // game itself
+  this.game = params.game;
 }
 
 Car.prototype = new RectangleEntity();
@@ -218,49 +225,65 @@ Car.prototype.createbody = function(world) {
   
 }
 
-Car.prototype.draw = function(params) {
-  // may need to take into account center of mass {x: body.GetWorldCenter().x, y: body.GetWorldCenter().y}
-  // var x = this.x, y = this.y, angle = this.angle;
-  // params.ctx.save();
-  // params.ctx.translate(x * SCALE, y * SCALE);
-  // params.ctx.rotate(angle);
-  // // the drawing is centered in the middle of the car now
+Car.prototype.draw = function(params){
 
-  // params.ctx.beginPath();
-  // params.ctx.fillStyle = 'black';
-  // params.ctx.moveTo(-(this.width/2) * SCALE+1, -(this.height/2) * SCALE+1);
-  // params.ctx.lineTo( (this.width/2) * SCALE+1, -(this.height/2) * SCALE+1 );
-  // params.ctx.lineTo( (this.width/2) * SCALE+1, (this.height/2) * SCALE+1);
-  // params.ctx.lineTo(-(this.width/2) * SCALE+1, (this.height/2) * SCALE+1);
-  // params.ctx.lineTo(-(this.width/2) * SCALE+1, -(this.height/2) * SCALE+1);
-  // params.ctx.closePath();
-  // params.ctx.fill();
-  // params.ctx.stroke();
+  // choose sprite set based on angle
+  var a = params.world.getangle(this.body);
+  a = Math.atan2( -Math.sin(a), Math.cos(a) );
+  // for reference, results anti-clockwise:
+  // [ math.atan2(0,1), math.atan2(1,1), math.atan2(1,0), math.atan2(1,-1), math.atan2(0,-1), math.atan2(-1,-1), math.atan2(-1,0), math.atan2(-1,1) ];
+  // [0.0, 0.78539816339744828, 1.5707963267948966, 2.3561944901923448, 3.1415926535897931, -2.3561944901923448, -1.5707963267948966, -0.78539816339744828]
 
-  // params.ctx.fillStyle = 'green';
-  // params.ctx.beginPath();
-  // params.ctx.moveTo(-(this.width/2) * SCALE, -(this.height/2) * SCALE);
-  // params.ctx.lineTo( (this.width/2) * SCALE, -(this.height/2) * SCALE );
-  // params.ctx.lineTo( (this.width/2) * SCALE, (this.height/2) * SCALE);
-  // params.ctx.lineTo(-(this.width/2) * SCALE, (this.height/2) * SCALE);
-  // params.ctx.lineTo(-(this.width/2) * SCALE, -(this.height/2) * SCALE);
-  // params.ctx.closePath();
-  // params.ctx.fill();
-  // params.ctx.stroke();
+  /*  This is the angle value (multiple of PI) and the dirction the character is facing
+
+                   -7/8 1 7/8
+                 -6/8\  |  /6/8
+               -5/8-_ \ | / _- 5/8
+                     -_\|/_-
+              -4/8------+------ 4/8
+              -3/8   _-/|\-_  3/8
+               -2/8_- / | \ -_ 2/8
+                     /  |  \ 1/4
+                 -1/8   0 1/8
+                      
+  */
+
+  // there must be a way to turn this into an equation...
+  var pos = 0;
+
+  if( a > -1*Math.PI/8 && a < 0*Math.PI/8) pos = 0;
+  else if( a > 0*Math.PI/8 && a < 1*Math.PI/8) pos = 1;
+
+  else if( a >= 1*Math.PI/8 && a < 2*Math.PI/8) pos = 2;
+  else if( a >= 2*Math.PI/8 && a < 3*Math.PI/8) pos = 3;
+
+  else if( a >= 3*Math.PI/8 && a < 4*Math.PI/8) pos = 4;
+  else if( a >= 4*Math.PI/8 && a < 5*Math.PI/8) pos = 5;
+
+  else if( a >= 5*Math.PI/8 && a < 6*Math.PI/8) pos = 6;
+  else if( a >= 6*Math.PI/8 && a < 7*Math.PI/8) pos = 7;
+
+  else if( a >= 7*Math.PI/8 && a < 8*Math.PI/8) pos = 8;
+  else if( a < -7*Math.PI/8 && a < 0) pos = 9;
+
+  else if( a < -6*Math.PI/8 && a >= -7*Math.PI/8) pos = 10;
+  else if( a < -5*Math.PI/8 && a >= -6*Math.PI/8) pos = 11;
+
+  else if( a < -4*Math.PI/8 && a >= -5*Math.PI/8) pos = 12;
+  else if( a < -3*Math.PI/8 && a >= -4*Math.PI/8) pos = 13;
+
+  else if( a < -2*Math.PI/8 && a >= -3*Math.PI/8) pos = 14;
+  else if( a < -1*Math.PI/8 && a >= -2*Math.PI/8) pos = 15;
 
 
-  // params.ctx.beginPath();
-  // params.ctx.moveTo(0, -(2*this.height/3) * SCALE);
-  // params.ctx.lineTo( (this.width/3) * SCALE, -(this.height/4) * SCALE);
-  // params.ctx.lineTo(-(this.width/3) * SCALE, -(this.height/4) * SCALE);
-  // params.ctx.lineTo(0, -(2*this.height/3) * SCALE);
-  // params.ctx.closePath();
-  // params.ctx.fill();
-  // params.ctx.stroke();
 
-  // params.ctx.restore();
+  var r = this.game.getSprite(this.currentspriteset[pos]);
+  params.ctx.drawImage( r.image,
+    this.x*SCALE-r.sprite.w/2-r.sprite.left,
+    this.y*SCALE-r.sprite.h/2-r.sprite.top );
+
   
-  RectangleEntity.prototype.draw.call(this, params);
+  // RectangleEntity.prototype.draw.call(this, params);
 };
 
 Car.prototype.getPoweredWheels=function(){
@@ -357,8 +380,8 @@ Car.prototype.update = function(msDuration, world){
           var b = pwheels[i].body;
           var direction = b.GetTransform().R.col2.Copy(); 
           //var direction = new b2Vec2(1.0,0.0);
-          direction.x = direction.x * force*(msDuration/10); /* multiplicar por velocidad */
-          direction.y = direction.y * force*(msDuration/10); /* multiplicar por velocidad */
+          direction.x = this.power * direction.x * force*(msDuration/1000); /* multiplicar por velocidad */
+          direction.y = this.power * direction.y * force*(msDuration/1000); /* multiplicar por velocidad */
           b.ApplyForce(direction, b.GetPosition()); // aplicar fuerza en direccion a rueda
         }
 

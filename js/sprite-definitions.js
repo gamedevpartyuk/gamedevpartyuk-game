@@ -59,5 +59,24 @@ var definitions = {
 'sprites/series/lostgarden-flag/lostgarden-flag 6.png': [ { id: 'lostgarden-flag-06', x:0, y:0, w:26, h:30, left:10, right:8, top:0, bottom:10 } ],
 'sprites/series/lostgarden-flag/lostgarden-flag 7.png': [ { id: 'lostgarden-flag-07', x:0, y:0, w:26, h:30, left:10, right:8, top:0, bottom:10 } ],
 'sprites/series/lostgarden-flag/lostgarden-flag 8.png': [ { id: 'lostgarden-flag-08', x:0, y:0, w:26, h:30, left:10, right:8, top:0, bottom:10 } ],
+
+// car images start with the car facing up and rotate left 45/2 degrees each time
+'sprites/series/car/carRotate0.png': [ { id: 'carRotate01', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate1.png': [ { id: 'carRotate02', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate2.png': [ { id: 'carRotate03', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate3.png': [ { id: 'carRotate04', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate4.png': [ { id: 'carRotate05', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate5.png': [ { id: 'carRotate06', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate6.png': [ { id: 'carRotate07', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate7.png': [ { id: 'carRotate08', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate8.png': [ { id: 'carRotate09', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate9.png': [ { id: 'carRotate10', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate10.png': [ { id: 'carRotate11', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate11.png': [ { id: 'carRotate12', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate12.png': [ { id: 'carRotate13', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate13.png': [ { id: 'carRotate14', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate14.png': [ { id: 'carRotate15', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+'sprites/series/car/carRotate15.png': [ { id: 'carRotate16', x:0, y:0, w:64, h:64, left:0, right:0, top:0, bottom:0 } ],
+
 };
 
