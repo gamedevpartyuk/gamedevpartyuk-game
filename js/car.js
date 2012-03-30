@@ -154,6 +154,7 @@ function Car(params){
                      //when steering left/right, angle will be decreased/increased gradually over 200ms to prevent jerkyness.
   this.width = params.width;
   this.height = params.height;
+  this.lapNumber = params.lapNumber;
 
   this.angle = params.angle;
 

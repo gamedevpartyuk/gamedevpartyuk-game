@@ -78,26 +78,64 @@ function Game(params) {
   
   this.isMobile = false;
 
+
+  var carsPassed = {};
+  var hasCarPassed = function(goal, wheel) {
+    if (typeof carsPassed[goal] === 'undefined') {
+      carsPassed[goal] = {};
+    }
+    if (typeof carsPassed[goal][wheel.car.id] === 'undefined') {
+      carsPassed[goal][wheel.car.id] = 0;  
+    }
+    carsPassed[goal][wheel.car.id]++;
+    if (carsPassed[goal][wheel.car.id] === 4) {
+      carsPassed[goal][wheel.car.id] = 0;
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   var self = this;
+  var carsGoingToGoal = [];
+  var carsGoingRear = [];
   this.addCarCrossesGoalCallback = function(callback) {
     var listener = new Box2D.Dynamics.b2ContactListener;
     var carsContacted = {};
+    var carsPreContacted = {};
     listener.BeginContact = function(contact) {
       var collidedEntity = self.myworld.getreffrombody(contact.GetFixtureB().GetBody());
       
-      
-      if (collidedEntity.id  === 'goal') {
-        var wheel = self.myworld.getreffrombody(contact.GetFixtureA().GetBody());
-        if (typeof carsContacted[wheel.car.id] === 'undefined') {
-          carsContacted[wheel.car.id] = 0;  
-        }
-        carsContacted[wheel.car.id]++;
-        if (carsContacted[wheel.car.id] === 4) {
-          carsContacted[wheel.car.id] = 0;
-          callback(wheel.car);
+      if (collidedEntity.id  === 'pregoal') {
+        var wheel = self.myworld.getreffrombody(contact.GetFixtureA().GetBody());  
+        if (hasCarPassed(collidedEntity.id, wheel)) {
+          // If the car is not going rear and hasn't passed before the pregoal, add it to pregoal
+          if (carsGoingRear.indexOf(wheel.car.id) === -1 && carsGoingToGoal.indexOf(wheel.car.id) === -1) {
+            carsGoingToGoal.push(wheel.car.id);
+          }
         }
       }
-    }
+
+      if (collidedEntity.id  === 'goal') {
+        var wheel = self.myworld.getreffrombody(contact.GetFixtureA().GetBody());  
+        if (hasCarPassed(collidedEntity.id, wheel)) {
+          // If the car ig going to goal, make the callback and remove it from the going to goal
+          if (carsGoingToGoal.indexOf(wheel.car.id) !== -1) {
+            carsGoingToGoal.splice(carsGoingToGoal.indexOf(wheel.car.id), 1);
+            callback(wheel.car);  
+
+          } else {
+            // If the car has already gone to goal, and was not going rear, he is now going rear
+            if (carsGoingRear.indexOf(wheel.car.id) === -1) {
+              carsGoingRear.push(wheel.car.id);  
+            // If the car has already passed the goal, and was going rear, now he is going forward
+            } else {
+              carsGoingRear.splice(carsGoingRear.indexOf(wheel.car.id), 1);
+            }
+          }
+        }
+      }
+    };
     listener.EndContact = function(contact) {
         //console.log(contact.GetFixtureA().GetBody().GetUserData());
     }
@@ -313,7 +351,8 @@ Game.prototype.init_phase_two = function() {
                   'max_steer_angle':30,
                   'max_speed':20,
                   'game': this,
-                  'id': Math.random(),
+                  'lapNumber': 0,
+                  'id': parseInt(Math.random() * 10),
                   'wheels':[{'x':-0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top left
                               {'x':0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top right
                               {'x':-0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false}, //back left
@@ -612,8 +651,14 @@ Game.prototype.registerListeners = function() {
     return true;
   }).bind(this));
 
+  var carLaps = {};
+  var self = this;
   this.addCarCrossesGoalCallback(function(car){
-      console.log('car crossed the goal: ', car);
+    if (typeof carLaps[car.id] === 'undefined') {
+      carLaps[car.id] = 0;
+    }
+    carLaps[car.id]++;
+    self.log = 'Car ' + car.id + ': Lap ' + carLaps[car.id];
   });
 }
 
