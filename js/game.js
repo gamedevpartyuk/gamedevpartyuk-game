@@ -87,7 +87,7 @@ Game.prototype.getSprite = function(name) {
 Game.prototype.init = function() {
 
   // load map data (exported as JSON from Tiled)
-  $.getJSON("maps/test.json", (function(data) {
+  $.getJSON("maps/screen00.json", (function(data) {
     this.mapdata = data;
     this.init_phase_two(); // can't continue until this finishes
   }).bind(this));
