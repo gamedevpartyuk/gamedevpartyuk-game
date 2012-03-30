@@ -38,15 +38,16 @@ io.sockets.on('connection', function (socket) {
     console.log(data);
     var player = createPlayer(socket.id,data.name);
     players[player.socket_id] = player;
-    socket.emit('join',{time:new Date().getTime()});
-    socket.broadcast.emit('news',player.name + " joined!!");
+    socket.emit('start',{time:new Date().getTime()});
+    socket.broadcast.emit('join',{name:player.name,id:socket.id});
   });
 
-  socket.on('event', function (data) {	
-    
+  socket.on('update', function (data) {	    
     var player = players[socket.id];
 	console.log(player.name + " moved");
-	socket.broadcast.emit('news',player.name + " moved");
+	data.player = socket.id;
+	data.time = new Date().getTime();
+	socket.broadcast.emit('update',data);
   });
 	
   	

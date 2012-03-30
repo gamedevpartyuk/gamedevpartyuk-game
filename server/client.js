@@ -9,13 +9,13 @@ function Server(_serverUrl, _playerName, _startCallback, _playerJoinCallback, _p
 	var thisServer = this;
 	
 	this.socket.on('start', function(data) {
-   		this.joinEndTime = new Date().getTime();
+   		thisServer.joinEndTime = new Date().getTime();
    		//calculate latency
-   		this.joinLatency = this.joinEndTime-this.joinStartTime;
-   		this.serverJoinTime = date.time;
+   		thisServer.joinLatency = thisServer.joinEndTime-thisServer.joinStartTime;
+   		thisServer.serverJoinTime = data.time;
    		//save the diference between local time and server time
-   		this.serverDiffTime = new Date().getTime()-this.serverJoinTime;
-   		this.startCallback();
+   		thisServer.serverDiffTime = new Date().getTime()-thisServer.serverJoinTime;
+   		thisServer.startCallback();
   	});
   	
   	this.socket.on('join', function(data) {
@@ -32,10 +32,10 @@ function Server(_serverUrl, _playerName, _startCallback, _playerJoinCallback, _p
   	this.join(this.playerName);
 }
 
-Server.prototype.join = function(playerName){
+Server.prototype.join = function(){
 	this.joinStartTime = new Date().getTime();
 	this.joinStartTime = new Date().getTime();
-	this.socket.emit('join', { name: name });
+	this.socket.emit('join', { name: this.playerName });
 }
 
 Server.prototype.update = function(updateEvent){

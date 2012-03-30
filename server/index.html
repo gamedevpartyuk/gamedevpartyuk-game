@@ -6,7 +6,8 @@
   var server = null;
 
   function join() {
-	var name = document.getElementById("name").value;	
+	var name = document.getElementById("name").value;
+	console.log('pn:'+name);
 	server = new Server(
 		null, name,
 		function(){
