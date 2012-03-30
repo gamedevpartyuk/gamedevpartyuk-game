@@ -623,27 +623,13 @@ Game.prototype.render = function() {
 
   // Set scroll position to follow mouse
   //
-  if( this.mouseY < 64 ) {
-    this.minimum_world_y = Math.min(
-                  Math.max(0, this.minimum_world_y - 10/SCALE ),
-                  this.map_height - this.canvas.height/SCALE );   
-  }
-  if( this.mouseY > (this.canvas.height-64) ) {
-    this.minimum_world_y = Math.min(
-                  Math.max(0, this.minimum_world_y + 10/SCALE ),
-                  this.map_height - this.canvas.height/SCALE );   
-  }
 
-  if( this.mouseX < 64 ) {
-    this.minimum_world_x = Math.min(
-                  Math.max(0, this.minimum_world_x - 10/SCALE ),
-                  this.map_width - this.canvas.width/SCALE );   
-  }
-  if( this.mouseX > (this.canvas.width-64) ) {
-    this.minimum_world_x = Math.min(
-                  Math.max(0, this.minimum_world_x + 10/SCALE ),
-                this.map_width - this.canvas.width/SCALE );
-  }
+  this.minimum_world_y = Math.max(0, this.usercontrolled[this.controllingEntity].y - this.canvas.height/SCALE/2) ; // offset for scrolling
+  this.minimum_world_x = Math.max(0, this.usercontrolled[this.controllingEntity].x - this.canvas.width/SCALE/2) ; // offset for scrolling
+
+  this.minimum_world_y = Math.min(this.map_height - this.canvas.height/SCALE, this.minimum_world_y) ; // offset for scrolling
+  this.minimum_world_x = Math.min(this.map_width - this.canvas.width/SCALE, this.minimum_world_x) ; // offset for scrolling
+
 
   this.maximum_world_y = this.minimum_world_y + this.canvas.height/SCALE;
   this.maximum_world_x = this.minimum_world_x + this.canvas.width/SCALE;
