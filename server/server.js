@@ -17,10 +17,31 @@ function handler (req, res) {
   });
 }
 
+function createPlayer(socket_id,name) {
+	var player = new Object();
+	player.socket_id = socket_id;
+	player.name = name;
+	return player;
+}
+
+
+var players = new Object();
+
 io.sockets.on('connection', function (socket) {
   socket.on('join', function (data) {	
     console.log(data);
-    socket.broadcast.emit('news',data.name + " joined!!");
+    var player = createPlayer(socket.id,data.name);
+    players[player.socket_id] = player;
+    socket.broadcast.emit('news',player.name + " joined!!");
   });
-  
+
+  socket.on('event', function (data) {	
+    
+    var player = players[socket.id];
+	console.log(player.name + " moved");
+	socket.broadcast.emit('news',player.name + " moved");
+  });
+	
+  	
+
 });
