@@ -171,9 +171,7 @@ function Car(params){
       this.wheels.push(new Wheel(wheeldef));
   }
 
-  this.currentspriteset = ['carRotate09', 'carRotate10', 'carRotate11', 'carRotate12', 'carRotate13', 'carRotate14', 
-    'carRotate15', 'carRotate16', 'carRotate01', 'carRotate02', 'carRotate03', 'carRotate04', 'carRotate05', 'carRotate06', 'carRotate07', 
-    'carRotate08' ];
+   this.currentspriteset = ["carRotate0016","carRotate0017", "carRotate0018", "carRotate0019", "carRotate0020", "carRotate0021", "carRotate0022", "carRotate0023", "carRotate0024", "carRotate0025", "carRotate0026", "carRotate0027", "carRotate0028", "carRotate0029", "carRotate0030", "carRotate0031", "carRotate0032","carRotate0000", "carRotate0001", "carRotate0002", "carRotate0003", "carRotate0004", "carRotate0005", "carRotate0006", "carRotate0007", "carRotate0008", "carRotate0009", "carRotate0010", "carRotate0011", "carRotate0012", "carRotate0013", "carRotate0014", "carRotate0015"];
 
   // game itself
   this.game = params.game;
@@ -251,7 +249,7 @@ Car.prototype.draw = function(params){
   // there must be a way to turn this into an equation...
   var pos = 0;
 
-  a += Math.PI + Math.PI/16;
+  a += Math.PI + Math.PI/32;
   pos =   Math.floor( (a/(2*Math.PI)) * this.currentspriteset.length ) % this.currentspriteset.length;
 
   // if( a > -1*Math.PI/8 && a < 0*Math.PI/8) pos = 0;
@@ -277,7 +275,6 @@ Car.prototype.draw = function(params){
 
   // else if( a < -2*Math.PI/8 && a >= -3*Math.PI/8) pos = 14;
   // else if( a < -1*Math.PI/8 && a >= -2*Math.PI/8) pos = 15;
-
 
 
   var r = this.game.getSprite(this.currentspriteset[pos]);
@@ -354,9 +351,9 @@ Car.prototype.update = function(msDuration, world){
         var incr=(this.max_steer_angle/500) * msDuration;
         
         if(this.movement & MOVE_RIGHT ){
-            this.wheel_angle=Math.min(this.wheel_angle+incr, this.max_steer_angle); //increment angle without going over max steer
+            this.wheel_angle=Math.min((this.wheel_angle+incr)*0.9, this.max_steer_angle); //increment angle without going over max steer
         }else if(this.movement & MOVE_LEFT){
-            this.wheel_angle=Math.max(this.wheel_angle-incr, -this.max_steer_angle); //decrement angle without going over max steer
+            this.wheel_angle=Math.max((this.wheel_angle-incr)*0.9, -this.max_steer_angle); //decrement angle without going over max steer
         }else{
           // if left/right is not pressed, gradually stabilize wheels
             if( this.wheel_angle<0 ) this.wheel_angle=Math.min(this.wheel_angle+incr*6, 0)
