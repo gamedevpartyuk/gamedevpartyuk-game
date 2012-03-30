@@ -199,7 +199,7 @@ Game.prototype.init_phase_two = function() {
             y: obj.y/SCALE - r.sprite.h/SCALE,
             imageid: obj.gid+"",
             bodyless:false,
-            isstatic:false, // TODO: true
+            isstatic:true, // TODO: true
             angle:0,
             'game': this,
           } );
@@ -236,14 +236,14 @@ Game.prototype.init_phase_two = function() {
   // {x, y, w, h, isstatic, angle, ref}
   //create margins
 
-  var bottom = new RectangleEntity({x:0, y:this.map_height, width:this.map_width, height:1/SCALE, isstatic:true});
-  var top = new RectangleEntity({x:0, y:0, width:this.map_width, height:1/SCALE, isstatic:true});
-  var left = new RectangleEntity({x:0, y:0, width:1/SCALE, height:this.map_height, isstatic:true});
-  var right = new RectangleEntity({x:this.map_width, y:0, width:1/SCALE, height:this.map_height, isstatic:true});
-  bottom.createbody(this.myworld);
-  top.createbody(this.myworld);
-  left.createbody(this.myworld);
-  right.createbody(this.myworld);
+  // var bottom = new RectangleEntity({x:0, y:this.map_height, width:this.map_width, height:1/SCALE, isstatic:true});
+  // var top = new RectangleEntity({x:0, y:0, width:this.map_width, height:1/SCALE, isstatic:true});
+  // var left = new RectangleEntity({x:0, y:0, width:1/SCALE, height:this.map_height, isstatic:true});
+  // var right = new RectangleEntity({x:this.map_width, y:0, width:1/SCALE, height:this.map_height, isstatic:true});
+  // bottom.createbody(this.myworld);
+  // top.createbody(this.myworld);
+  // left.createbody(this.myworld);
+  // right.createbody(this.myworld);
 
   // initialize user controlled character
   // var boy=new AnimatedSprite(

@@ -28,16 +28,16 @@ RectangleEntity.prototype.constructor = RectangleEntity;
 RectangleEntity.prototype.draw = function(params) {
 
   // for debugging, it's useful to enable this from time to time
-  params.ctx.save();
-  params.ctx.translate(this.x * SCALE, this.y * SCALE);
-  params.ctx.rotate(this.angle);
-  params.ctx.translate(-(this.x) * SCALE, -(this.y) * SCALE);
-  params.ctx.strokeStyle = 'rgb(188,188,100)';
-  params.ctx.strokeRect((this.x-this.width/2) * SCALE,
-               (this.y-this.height/2) * SCALE,
-               this.width*SCALE,
-               this.height*SCALE);
-  params.ctx.restore();
+  // params.ctx.save();
+  // params.ctx.translate(this.x * SCALE, this.y * SCALE);
+  // params.ctx.rotate(this.angle);
+  // params.ctx.translate(-(this.x) * SCALE, -(this.y) * SCALE);
+  // params.ctx.strokeStyle = 'rgb(188,188,100)';
+  // params.ctx.strokeRect((this.x-this.width/2) * SCALE,
+  //              (this.y-this.height/2) * SCALE,
+  //              this.width*SCALE,
+  //              this.height*SCALE);
+  // params.ctx.restore();
   
   Entity.prototype.draw.call(this, params);
 }
