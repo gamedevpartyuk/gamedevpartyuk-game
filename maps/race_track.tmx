@@ -102,5 +102,68 @@
   <object x="479" y="54">
    <polygon points="0,0 61,11 107,38 70,67"/>
   </object>
+  <object x="364" y="493">
+   <polygon points="0,0 276,-321 383,-253 77,28"/>
+  </object>
+  <object x="641" y="173">
+   <polygon points="0,0 85,-40 175,16 107,69"/>
+  </object>
+  <object x="741" y="140">
+   <polygon points="0,0 159,3 149,111 29,104"/>
+  </object>
+  <object x="895" y="201">
+   <polygon points="0,0 83,137 -4,167 -68,25"/>
+  </object>
+  <object x="927" y="253">
+   <polygon points="0,0 108,67 120,159 -21,67"/>
+  </object>
+  <object x="1012" y="305">
+   <polygon points="0,0 173,41 191,139 -4,107"/>
+  </object>
+  <object x="1179" y="348">
+   <polygon points="0,0 171,1 203,113 -3,103"/>
+  </object>
+  <object x="1347" y="351">
+   <polygon points="0,0 120,-36 157,103 17,157"/>
+  </object>
+  <object x="1396" y="439">
+   <polygon points="0,0 105,15 99,131 -12,173"/>
+  </object>
+  <object x="1493" y="572">
+   <polygon points="0,0 -44,116 -151,55"/>
+  </object>
+  <object x="1343" y="633">
+   <polygon points="0,0 105,53 3,179 -49,59"/>
+  </object>
+  <object x="1199" y="692">
+   <polygon points="0,0 93,0 147,123 29,125"/>
+  </object>
+  <object x="364" y="496">
+   <polygon points="0,0 79,25 13,255 -89,164"/>
+  </object>
+  <object x="277" y="664">
+   <polygon points="0,0 163,28 137,177 -8,92"/>
+  </object>
+  <object x="431" y="760">
+   <polygon points="0,0 216,11 164,112 -16,81"/>
+  </object>
+  <object x="589" y="780">
+   <polygon points="0,0 164,-85 191,48 1,93"/>
+  </object>
+  <object x="755" y="720">
+   <polygon points="0,0 107,-181 181,-120 19,116"/>
+  </object>
+  <object x="937" y="597">
+   <polygon points="0,0 -73,-49 3,-121 59,-48"/>
+  </object>
+  <object x="944" y="479">
+   <polygon points="0,0 176,-12 121,72 39,80"/>
+  </object>
+  <object x="1067" y="553">
+   <polygon points="0,0 43,-80 147,-29 73,41"/>
+  </object>
+  <object x="1143" y="593">
+   <polygon points="0,0 69,-63 135,79 56,99"/>
+  </object>
  </objectgroup>
 </map>
