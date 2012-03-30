@@ -370,7 +370,7 @@ Car.prototype.update = function(msDuration, world){
         if(this.movement & MOVE_UP) {
           force = -SCALE;
         } else if(this.movement & MOVE_DOWN) {
-          force = SCALE;
+          force = SCALE/2;
         }
 
         var velocity=this.body.GetLinearVelocity(); // velocity vector

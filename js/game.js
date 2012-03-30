@@ -273,7 +273,7 @@ Game.prototype.init_phase_two = function() {
                   'y': 3,
                   'angle':Math.PI, 
                   'power':60,
-                  'max_steer_angle':30,
+                  'max_steer_angle':25,
                   'max_speed':60,
                   'game': this,
                   'wheels':[{'x':-0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top left
