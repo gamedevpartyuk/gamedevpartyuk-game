@@ -1,0 +1,40 @@
+<html>
+<head>
+<script src="client.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var server = null;
+
+  function join() {
+	var name = document.getElementById("name").value;
+	console.log('pn:'+name);
+	server = new Server(
+		null, name,
+		function(){
+			console.log('start in '+server.joinLatency);
+		},
+		function(data){
+			console.log(data);
+		},
+		function(data){
+			console.log(data);
+		}
+	);
+  }
+
+  function sendEvent() {	
+	 server.update({x:43,y:34,vx:1,vy:2,a:0});
+  }
+</script>
+</head>
+<body>
+	<p>
+		helooo: <input type="text" id="name" value="" />
+		<input type="button"  value="join" onclick="join()" />
+		<input type="button"  value="event" onclick="sendEvent()" />
+	</p>
+	<p id="log" style="color:red;">
+		
+	</p>
+</body>
+</html>
