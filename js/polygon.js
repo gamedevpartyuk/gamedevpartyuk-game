@@ -3,9 +3,9 @@
 // id, x, y, center, points, bodyless, isstatic
 function PolygonEntity( params ) {
   Entity.call(this, params);
-  this.points = points;
-  this.bodyless = bodyless;
-  this.isstatic = isstatic;
+  this.points = params.points;
+  this.bodyless = params.bodyless;
+  this.isstatic = params.isstatic;
 }
 
 PolygonEntity.prototype = new Entity();
@@ -77,6 +77,7 @@ PolygonEntity.prototype.createbody = function(world) {
   bodyDef.position.x = this.x;
   bodyDef.position.y = this.y;
   bodyDef.userData = this;
-  this.body = world.CreateBody(bodyDef);
+  // TODO: migrate this to World
+  this.body = world.world.CreateBody(bodyDef);
   this.body.CreateFixture(fixDef);
 }
