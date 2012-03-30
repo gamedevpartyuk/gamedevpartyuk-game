@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="1" height="1" tilewidth="1800" tileheight="1200">
+ <tileset firstgid="1" name="race_track1" tilewidth="1800" tileheight="1200">
+  <image source="../tiles/race_track1.png" width="1800" height="1200"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="1" height="1">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgAAAACAAC
+  </data>
+ </layer>
+ <objectgroup name="limits" width="1" height="1">
+  <object x="977" y="16">
+   <polygon points="0,0 22,83 -36,46"/>
+  </object>
+  <object x="1000" y="103">
+   <polygon points="0,0 47,85 67,-26"/>
+  </object>
+  <object x="1021" y="149">
+   <polygon points="0,0 28,50 -10,41"/>
+  </object>
+ </objectgroup>
+</map>
