@@ -246,27 +246,29 @@ Game.prototype.init_phase_two = function() {
   right.createbody(this.myworld);
 
   // initialize user controlled character
-  var boy=new AnimatedSprite(
-    { 'id': this.entities.length,
-      'x': this.map_width*0.7,
-      'y': 9.5,
-      'speed': 3,
-      'spritesleft': [ 'boy-left-01', 'boy-left-02' ],
-      'spritesdownleft': [ 'boy-down-left-01', 'boy-down-left-02' ],
-      'spritesupleft': [ 'boy-up-left-01', 'boy-up-left-02' ],
-      'spritesright': [ 'boy-right-01', 'boy-right-02' ],
-      'spritesupright': [ 'boy-up-right-01', 'boy-up-right-02' ],
-      'spritesdownright': [ 'boy-down-right-01', 'boy-down-right-02' ],
-      'spritesup': [ 'boy-up-01', 'boy-up-02' ],
-      'spritesdown': [ 'boy-down-01', 'boy-down-02' ],
-      'game': this,
-    });
-  this.entities.push( boy );
-  this.usercontrolled.push( boy );
+  // var boy=new AnimatedSprite(
+  //   { 'id': this.entities.length,
+  //     'x': this.map_width*0.7,
+  //     'y': 9.5,
+  //     'speed': 3,
+  //     'spritesleft': [ 'boy-left-01', 'boy-left-02' ],
+  //     'spritesdownleft': [ 'boy-down-left-01', 'boy-down-left-02' ],
+  //     'spritesupleft': [ 'boy-up-left-01', 'boy-up-left-02' ],
+  //     'spritesright': [ 'boy-right-01', 'boy-right-02' ],
+  //     'spritesupright': [ 'boy-up-right-01', 'boy-up-right-02' ],
+  //     'spritesdownright': [ 'boy-down-right-01', 'boy-down-right-02' ],
+  //     'spritesup': [ 'boy-up-01', 'boy-up-02' ],
+  //     'spritesdown': [ 'boy-down-01', 'boy-down-02' ],
+  //     'game': this,
+  //   });
+  // this.entities.push( boy );
+  // this.usercontrolled.push( boy );
 
   //initialize car
-  var car=new Car({'width':1,
-                  'height':1.5,
+  var car_width = 14 / SCALE; /* sprites are 64 pixels but car is actually smaller */
+  var car_height = 32 / SCALE;
+  var car=new Car({'width': car_width,
+                  'height': car_height,
                   'x': this.map_width*0.7,
                   'y': 3,
                   'angle':Math.PI, 
@@ -274,10 +276,10 @@ Game.prototype.init_phase_two = function() {
                   'max_steer_angle':30,
                   'max_speed':60,
                   'game': this,
-                  'wheels':[{'x':-0.5, 'y':-0.5, 'width':0.3, 'height':0.4, 'revolving':true, 'powered':true}, //top left
-                              {'x':0.5, 'y':-0.5, 'width':0.3, 'height':0.4, 'revolving':true, 'powered':true}, //top right
-                              {'x':-0.5, 'y':0.5, 'width':0.3, 'height':0.4, 'revolving':false, 'powered':false}, //back left
-                              {'x':0.5, 'y':0.5, 'width':0.3, 'height':0.4, 'revolving':false, 'powered':false}]}); //back right
+                  'wheels':[{'x':-0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top left
+                              {'x':0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top right
+                              {'x':-0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false}, //back left
+                              {'x':0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false}]}); //back right
   this.entities.push( car );
   this.usercontrolled.push( car );
   
@@ -746,7 +748,7 @@ Game.prototype.render = function() {
 
   // Finally, draw all those entities, in order
   //
-  var parametros = { ctx: this.ctx, isSelected: false };
+  var parametros = { ctx: this.ctx, isSelected: false, world: this.myworld };
   for(var i in visible) {
     entity = visible[i];
     parametros.isSelected = (this.selectedEntity == entity);
