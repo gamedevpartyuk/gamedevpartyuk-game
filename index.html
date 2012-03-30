@@ -192,6 +192,17 @@ $(document).ready( function() {
       window.msCancelRequestAnimationFrame ? msCancelRequestAnimationFrame(handle.value) :
       clearInterval(handle);
   };
+  
+  window.isMobileBrowser = function() {
+    var useragent = navigator.userAgent;
+    useragent = useragent.toLowerCase();
+
+    if (useragent.indexOf('iphone') != -1 || useragent.indexOf('symbianos') != -1 || useragent.indexOf('ipad') != -1 || useragent.indexOf('ipod') != -1 || useragent.indexOf('android') != -1 || useragent.indexOf('blackberry') != -1 || useragent.indexOf('samsung') != -1 || useragent.indexOf('nokia') != -1 || useragent.indexOf('windows ce') != -1 || useragent.indexOf('sonyericsson') != -1 || useragent.indexOf('webos') != -1 || useragent.indexOf('wap') != -1 || useragent.indexOf('motor') != -1 || useragent.indexOf('symbian') != -1 ) {
+    		return true;
+    } 
+    
+    return false;
+  }
 
   var mycanvas = document.getElementById("gamecanvas");
   the_game = new Game({ canvas:mycanvas });

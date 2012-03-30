@@ -73,7 +73,10 @@ function Game(params) {
   // physical world
   this.myworld = undefined;
   
+  // Simple log string
   this.log = "";
+  
+  this.isMobile = false;
 
 }
 
@@ -87,6 +90,7 @@ Game.prototype.getSprite = function(name) {
 // --------------------------------------------------------------------------------------------
 
 Game.prototype.init = function() {
+  this.isMobile = window.isMobileBrowser();
 
   // load map data (exported as JSON from Tiled)
   $.getJSON("maps/race_track.json", (function(data) {
@@ -274,9 +278,9 @@ Game.prototype.init_phase_two = function() {
                   'x': this.map_width/2,
                   'y': this.map_height/2,
                   'angle':Math.PI, 
-                  'power':7,
+                  'power':3,
                   'max_steer_angle':30,
-                  'max_speed':30,
+                  'max_speed':20,
                   'game': this,
                   'wheels':[{'x':-0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top left
                               {'x':0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top right
@@ -879,14 +883,16 @@ Game.prototype.render = function() {
   }
   
   //Draw the controls LoL
-  this.ctx.fillStyle = '#FF0000';
-  this.ctx.fillRect(0, this.canvas.height * 0.8, this.canvas.width * 0.25, this.canvas.height);
-  this.ctx.fillStyle = '#00FF00';
-  this.ctx.fillRect(this.canvas.width * 0.25, this.canvas.height * 0.8, this.canvas.width * 0.25, this.canvas.height);
-  this.ctx.fillStyle = '#FF0000';
-  this.ctx.fillRect(this.canvas.width * 0.8, 0, this.canvas.width * 0.2, this.canvas.height * 0.5);
-  this.ctx.fillStyle = '#00FF00';
-  this.ctx.fillRect(this.canvas.width * 0.8, this.canvas.height * 0.5, this.canvas.width * 0.2, this.canvas.height * 0.5);
+  if(this.isMobile) {
+    this.ctx.fillStyle = '#FF0000';
+    this.ctx.fillRect(0, this.canvas.height * 0.8, this.canvas.width * 0.25, this.canvas.height);
+    this.ctx.fillStyle = '#00FF00';
+    this.ctx.fillRect(this.canvas.width * 0.25, this.canvas.height * 0.8, this.canvas.width * 0.25, this.canvas.height);
+    this.ctx.fillStyle = '#FF0000';
+    this.ctx.fillRect(this.canvas.width * 0.8, 0, this.canvas.width * 0.2, this.canvas.height * 0.5);
+    this.ctx.fillStyle = '#00FF00';
+    this.ctx.fillRect(this.canvas.width * 0.8, this.canvas.height * 0.5, this.canvas.width * 0.2, this.canvas.height * 0.5);
+  }
 
   // request next render
   requestAnimFrame(this.boundrender);

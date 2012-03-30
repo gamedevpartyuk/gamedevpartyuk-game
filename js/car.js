@@ -351,9 +351,9 @@ Car.prototype.update = function(msDuration, world){
         var incr=(this.max_steer_angle/500) * msDuration;
         
         if(this.movement & MOVE_RIGHT ){
-            this.wheel_angle=Math.min(this.wheel_angle+(incr/3), this.max_steer_angle); //increment angle without going over max steer
+            this.wheel_angle=Math.min(this.wheel_angle+(incr/2), this.max_steer_angle); //increment angle without going over max steer
         }else if(this.movement & MOVE_LEFT){
-            this.wheel_angle=Math.max(this.wheel_angle-(incr/3), -this.max_steer_angle); //decrement angle without going over max steer
+            this.wheel_angle=Math.max(this.wheel_angle-(incr/2), -this.max_steer_angle); //decrement angle without going over max steer
         }else{
           // if left/right is not pressed, gradually stabilize wheels
             if( this.wheel_angle<0 ) this.wheel_angle=Math.min(this.wheel_angle+incr*6, 0)
