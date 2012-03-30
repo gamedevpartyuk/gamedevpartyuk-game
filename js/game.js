@@ -78,6 +78,37 @@ function Game(params) {
   
   this.isMobile = false;
 
+  var self = this;
+  this.addCarCrossesGoalCallback = function(callback) {
+    var listener = new Box2D.Dynamics.b2ContactListener;
+    var carsContacted = {};
+    listener.BeginContact = function(contact) {
+      var collidedEntity = self.myworld.getreffrombody(contact.GetFixtureB().GetBody());
+      
+      
+      if (collidedEntity.id  === 'goal') {
+        var wheel = self.myworld.getreffrombody(contact.GetFixtureA().GetBody());
+        if (typeof carsContacted[wheel.car.id] === 'undefined') {
+          carsContacted[wheel.car.id] = 0;  
+        }
+        carsContacted[wheel.car.id]++;
+        if (carsContacted[wheel.car.id] === 4) {
+          carsContacted[wheel.car.id] = 0;
+          callback(wheel.car);
+        }
+      }
+    }
+    listener.EndContact = function(contact) {
+        //console.log(contact.GetFixtureA().GetBody().GetUserData());
+    }
+    listener.PostSolve = function(contact, impulse) {
+        
+    }
+    listener.PreSolve = function(contact, oldManifold) {
+
+    }
+    self.myworld.world.SetContactListener(listener);
+  };
 }
 
 Game.prototype.getSprite = function(name) {
@@ -169,9 +200,6 @@ Game.prototype.init_phase_two = function() {
     }
   } 
 
-  // register keyboard and mouse listeners
-  this.registerListeners();
-
   // Create a world that has no gravity, to simulate a top view
   this.myworld = new World();
   // choose implementation
@@ -221,8 +249,11 @@ Game.prototype.init_phase_two = function() {
             points[p].x /= SCALE;
             points[p].y /= SCALE;
           }
+
+          var id = obj.name ? obj.name : this.entities.length;
+
           this.entities.push( new PolygonEntity(
-            { id:this.entities.length, x:obj.x/SCALE, y:obj.y/SCALE, center:{x:null, y:null}, points:points, bodyless:false, isstatic:true } ) );
+            { id:id, x:obj.x/SCALE, y:obj.y/SCALE, center:{x:null, y:null}, points:points, bodyless:false, isstatic:true } ) );
         }
 
       } // for
@@ -276,12 +307,13 @@ Game.prototype.init_phase_two = function() {
   var car=new Car({'width': car_width,
                   'height': car_height,
                   'x': this.map_width/2,
-                  'y': this.map_height/2,
+                  'y': this.map_height/2+4,
                   'angle':Math.PI, 
                   'power':3,
                   'max_steer_angle':30,
                   'max_speed':20,
                   'game': this,
+                  'id': Math.random(),
                   'wheels':[{'x':-0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top left
                               {'x':0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top right
                               {'x':-0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false}, //back left
@@ -326,9 +358,11 @@ Game.prototype.init_phase_two = function() {
   // model update callback
   requestAnimFrame(this.boundrender); //, this.renderDelay);
 
+  // register keyboard and mouse listeners
+  this.registerListeners();
+
   // render callback
   setTimeout(this.boundupdate, this.updateDelay);
-
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -578,7 +612,9 @@ Game.prototype.registerListeners = function() {
     return true;
   }).bind(this));
 
-
+  this.addCarCrossesGoalCallback(function(car){
+      console.log('car crossed the goal: ', car);
+  });
 }
 
 // ----------------------------------------------------------------------------------------
@@ -919,7 +955,6 @@ Game.prototype.getElementPosition = function(element) {
 
   return {x: x, y: y};
 }
-
 
 
 // -------------------------------------------------------------------------------
