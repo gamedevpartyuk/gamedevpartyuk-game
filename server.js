@@ -23,9 +23,9 @@ function handler (req, res) {
   });
 }
 
-function createPlayer(socket_id,name) {
+function createPlayer(id,name) {
 	var player = new Object();
-	player.socket_id = socket_id;
+	player.id = id;
 	player.name = name;
 	return player;
 }
@@ -34,13 +34,21 @@ function createPlayer(socket_id,name) {
 var players = new Object();
 
 io.sockets.on('connection', function (socket) {
+
   socket.on('join', function (data) {	
     console.log(data);
     var player = createPlayer(socket.id,data.name);
-    players[player.socket_id] = player;
-    socket.emit('start',{time:new Date().getTime()});
+    socket.emit('start',{time:new Date().getTime(),players:players});
+    players[player.id] = player;
     socket.broadcast.emit('join',{name:player.name,id:socket.id});
   });
+
+  
+  socket.on('disconnect', function () {   
+    socket.broadcast.emit('disconnect',{player:socket.id});
+    delete players[socket.id];
+  });
+
 
   socket.on('update', function (data) {	    
     var player = players[socket.id];

@@ -165,6 +165,7 @@ Game.prototype.init = function() {
   $.getJSON("maps/race_track.json", (function(data) {
     this.mapdata = data;
     this.init_phase_two(); // can't continue until this finishes
+    this.connectToServer();
   }).bind(this));
 
 }
@@ -742,6 +743,9 @@ Game.prototype.update = function() {
 
   } // if not pause
   
+  //notify the server about the update
+  this.sendCarDetails(this.usercontrolled[this.controllingEntity]);
+  
   // request next update
   setTimeout( this.boundupdate, this.updateDelay );
 }; // update()
@@ -1027,3 +1031,82 @@ Game.prototype.toggledebug = function() {
   else this.displayDebugInfo = true;
 }
 
+// -------------------------------------------------------------------------------
+Game.prototype.addPlayerCar = function(playerId){
+	//console.log('adding car for '+playerId);
+	var car_width = 14 / SCALE; /* sprites are 64 pixels but car is actually smaller */
+	var car_height = 32 / SCALE;
+	var car = new Car({'width': car_width,
+				  'height': car_height,
+				  'x': this.map_width/2,
+				  'y': this.map_height/2,
+				  'angle':Math.PI, 
+				  'power':60,
+				  'max_steer_angle':15,
+				  'max_speed':60,
+				  'game': this,
+				  'wheels':[{'x':-0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top left
+							  {'x':0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top right
+							  {'x':-0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false}, //back left
+							  {'x':0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false}]}); //back right
+	  this.players[playerId] = car;       
+	  this.entities.push( car );
+	  car.createbody(this.myworld);
+	  //console.log(this.players);
+}
+
+Game.prototype.removePlayerCar = function(playerId){
+	//console.log('removing car for '+playerId);
+	var car = this.players[playerId];   
+	var indx = this.entities.indexOf(car);
+	//console.log(indx);
+	this.myworld.world.DestroyBody(car.body);
+	delete this.entities[indx];
+}
+
+Game.prototype.connectToServer = function(){
+this.server = new Server(null,'player',
+	
+	(function(players){
+		//console.log('connected to server');
+		this.players = {};
+		this. lastServerUpdate = 0;
+		
+		for(var p in players){
+			if(players.hasOwnProperty(p)){
+				this.addPlayerCar(players[p].id);	
+			}
+		}
+	}).bind(this),
+	
+	(function(data){	
+		this.addPlayerCar(data.id);
+	}).bind(this),
+	
+	(function(data){
+		this.removePlayerCar(data.player);
+	}).bind(this),
+	
+	(function(data){
+		var playerId = data.player;
+		var car = this.players[playerId];
+		
+		if(car){
+			car.body.SetPositionAndAngle(data.pos,data.angle);
+		}
+		
+	}).bind(this)
+);
+};
+
+Game.prototype.sendCarDetails = function(car){
+	var now = new Date().getTime();
+	if(now - this.lastServerUpdate > 100){ //don't update more often than a threashold
+		this.server.update({
+			pos: car.body.GetPosition(),
+			power: car.power,
+			angle: car.angle
+		});
+		this.lastServerUpdate = now;
+	}
+}
