@@ -14,6 +14,13 @@
 	
   }
 
+  function sendEvent() {
+
+	
+	 socket.emit('event', { name: name });
+
+  }
+
   
 
 
@@ -23,6 +30,8 @@
 	<p>
 		helooo: <input type="text" id="name" value="" />
 		<input type="button"  value="join" onclick="join()" />
+		
+		<input type="button"  value="event" onclick="sendEvent()" />
 	</p>
 </body>
 </html>
