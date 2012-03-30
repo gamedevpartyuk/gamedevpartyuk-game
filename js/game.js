@@ -87,7 +87,7 @@ Game.prototype.getSprite = function(name) {
 Game.prototype.init = function() {
 
   // load map data (exported as JSON from Tiled)
-  $.getJSON("maps/screen00.json", (function(data) {
+  $.getJSON("maps/test.json", (function(data) {
     this.mapdata = data;
     this.init_phase_two(); // can't continue until this finishes
   }).bind(this));
@@ -216,7 +216,7 @@ Game.prototype.init_phase_two = function() {
             points[p].y /= SCALE;
           }
           this.entities.push( new PolygonEntity(
-            { id:this.entities.length, x:obj.x/SCALE, y:obj.y/SCALE, center:{x:null, y:null}, points:points, bodyless:false, isstatic:true } ) );
+            { id:this.entities.length, x:obj.x/SCALE, y:obj.y/SCALE, center:{x:null, y:null}, points:points, bodyless:false, isstatic:true } ) );
         }
 
       } // for
