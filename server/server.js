@@ -32,6 +32,7 @@ io.sockets.on('connection', function (socket) {
     console.log(data);
     var player = createPlayer(socket.id,data.name);
     players[player.socket_id] = player;
+    socket.emit('join',{time:new Date().getTime()});
     socket.broadcast.emit('news',player.name + " joined!!");
   });
 

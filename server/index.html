@@ -2,15 +2,26 @@
 <head>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  var socket = io.connect('http://192.168.0.72:8080');
+//  var socket = io.connect('http://192.168.0.72:8080');
+  var socket = io.connect('http://localhost:8080');
+  var joinStartTime;
   
   socket.on('news', function (data) {
     console.log(data);
   });
+  
+  socket.on('join', function(data) {
+   	var joinEndTime = new Date().getTime();
+   	var latency = joinEndTime-joinStartTime;
+   	var oldHTML = document.getElementById('log').innerHTML;
+	var newHTML = "<br />Joined in <b>"+latency+"</b> ms" + oldHTML;
+   	document.getElementById('log').innerHTML = newHTML; 
+  });
 
   function join() {
 	var name = document.getElementById("name").value;
-	socket.emit('join', { name: name });	
+	joinStartTime = new Date().getTime();
+	socket.emit('join', { name: name });
   }
 
   function sendEvent() {	
@@ -25,7 +36,7 @@
 		
 		<input type="button"  value="event" onclick="sendEvent()" />
 	</p>
-	<p id="log">
+	<p id="log" style="color:red;">
 		
 	</p>
 </body>
