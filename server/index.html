@@ -1,0 +1,28 @@
+<html>
+<head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://192.168.0.72:8080');
+  socket.on('news', function (data) {
+    console.log(data);
+  });
+
+  function join() {
+
+	var name = document.getElementById("name").value;
+	 socket.emit('join', { name: name });
+	
+  }
+
+  
+
+
+</script>
+</head>
+<body>
+	<p>
+		helooo: <input type="text" id="name" value="" />
+		<input type="button"  value="join" onclick="join()" />
+	</p>
+</body>
+</html>
