@@ -388,32 +388,29 @@ Game.prototype.registerListeners = function() {
     return false; // swallow event if it touches an entity TODO: "if!!"
     */
     e.preventDefault();
+    
+    this.log = "";
         
     var canvasPosition = this.getElementPosition(this.canvas);
     var x,y;
     for(var i=0; i<e.changedTouches.length; i++) {
       x = e.changedTouches[i].pageX - canvasPosition.x;
       y = e.changedTouches[i].pageY - canvasPosition.y;
-      this.log = x + ',' + y + ' -> ' + this.canvas.width + ' , ' + this.canvas.height;
       if(x < this.canvas.width * 0.5 && y > this.canvas.height * 0.8) {
         //Direction
         if(x < this.canvas.width * 0.25) {
           //Left
-          this.log = 'Left!';
           this.usercontrolled[this.controllingEntity].movement |= MOVE_LEFT;
         } else {
           //Right
-          this.log = 'Right!';
           this.usercontrolled[this.controllingEntity].movement |= MOVE_RIGHT;
         }
       } else if (x > this.canvas.width * 0.8) {
         if(y > this.canvas.height * 0.5) {
           //Brake
-          this.log = 'Brake!';
           this.usercontrolled[this.controllingEntity].movement |= MOVE_DOWN;
         } else {
           //Accelerate!
-          this.log = 'Accelerate!';
           this.usercontrolled[this.controllingEntity].movement |= MOVE_UP;
         }
       }
@@ -439,30 +436,25 @@ Game.prototype.registerListeners = function() {
     for(var i=0; i<e.changedTouches.length; i++) {
       x = e.changedTouches[i].pageX - canvasPosition.x;
       y = e.changedTouches[i].pageY - canvasPosition.y;
-      this.log = x + ',' + y + ' -> ' + this.canvas.width + ' , ' + this.canvas.height;
-
+      
       if(x < this.canvas.width * 0.5 && y > this.canvas.height * 0.8) {
         //Direction
         if(x < this.canvas.width * 0.25) {
           //Left
-          this.log = 'Left!';
           this.usercontrolled[this.controllingEntity].movement |= MOVE_LEFT;
           this.usercontrolled[this.controllingEntity].movement &= ~MOVE_RIGHT;
         } else {
           //Right
-          this.log = 'Right!';
           this.usercontrolled[this.controllingEntity].movement |= MOVE_RIGHT;
           this.usercontrolled[this.controllingEntity].movement &= ~MOVE_LEFT;
         }
       } else if (x > this.canvas.width * 0.8) {
         if(y > this.canvas.height * 0.5) {
           //Brake
-          this.log = 'Brake!';
           this.usercontrolled[this.controllingEntity].movement |= MOVE_DOWN;
           this.usercontrolled[this.controllingEntity].movement &= ~MOVE_UP;
         } else {
           //Accelerate!
-          this.log = 'Accelerate!';
           this.usercontrolled[this.controllingEntity].movement |= MOVE_UP;
           this.usercontrolled[this.controllingEntity].movement &= ~MOVE_DOWN;
         }
@@ -479,43 +471,40 @@ Game.prototype.registerListeners = function() {
     // this.mouseY = undefined;
     // return false;
     
-    this.usercontrolled[this.controllingEntity].movement &= ~MOVE_LEFT;
-    this.usercontrolled[this.controllingEntity].movement &= ~MOVE_UP;
-    this.usercontrolled[this.controllingEntity].movement &= ~MOVE_RIGHT;
-    this.usercontrolled[this.controllingEntity].movement &= ~MOVE_DOWN;
-    
+    e.preventDefault();
+        
+    var canvasPosition = this.getElementPosition(this.canvas);
+    var x,y;
+      
     for(var i=0; i<e.changedTouches.length; i++) {
       x = e.changedTouches[i].pageX - canvasPosition.x;
       y = e.changedTouches[i].pageY - canvasPosition.y;
       this.log = x + ',' + y + ' -> ' + this.canvas.width + ' , ' + this.canvas.height;
 
-      if(x < this.canvas.width * 0.5 && y < this.canvas.height * 0.8) {
+      if(x < this.canvas.width * 0.5 && y > this.canvas.height * 0.8) {
         //Direction
         if(x < this.canvas.width * 0.25) {
           //Left
-          this.log = 'Left!';
+          this.log = 'End Left!';
           this.usercontrolled[this.controllingEntity].movement &= ~MOVE_LEFT;
         } else {
           //Right
-          this.log = 'Right!';
+          this.log = 'End Right!';
           this.usercontrolled[this.controllingEntity].movement &= ~MOVE_RIGHT;
         }
       } else if (x > this.canvas.width * 0.8) {
         if(y > this.canvas.height * 0.5) {
           //Brake
-          this.log = 'Brake!';
+          this.log = 'End Brake!';
           this.usercontrolled[this.controllingEntity].movement &= ~MOVE_DOWN;
         } else {
           //Accelerate!
-          this.log = 'Accelerate!';
+          this.log = 'End Accelerate!';
           this.usercontrolled[this.controllingEntity].movement &= ~MOVE_UP;
         }
       }
     }
-    
-    this.log = "";
-    
-    e.preventDefault();
+        
   }).bind(this);
 
   this.canvas.ontouchcancel = (function(e) {
@@ -888,6 +877,16 @@ Game.prototype.render = function() {
   if( this.mouseX && this.mouseY ) {
     this.ctx.fillText(this.mouseX.toFixed(2) + "-" + this.mouseY.toFixed(2), 25, 50);
   }
+  
+  //Draw the controls LoL
+  this.ctx.fillStyle = '#FF0000';
+  this.ctx.fillRect(0, this.canvas.height * 0.8, this.canvas.width * 0.25, this.canvas.height);
+  this.ctx.fillStyle = '#00FF00';
+  this.ctx.fillRect(this.canvas.width * 0.25, this.canvas.height * 0.8, this.canvas.width * 0.25, this.canvas.height);
+  this.ctx.fillStyle = '#FF0000';
+  this.ctx.fillRect(this.canvas.width * 0.8, 0, this.canvas.width * 0.2, this.canvas.height * 0.5);
+  this.ctx.fillStyle = '#00FF00';
+  this.ctx.fillRect(this.canvas.width * 0.8, this.canvas.height * 0.5, this.canvas.width * 0.2, this.canvas.height * 0.5);
 
   // request next render
   requestAnimFrame(this.boundrender);
