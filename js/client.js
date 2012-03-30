@@ -1,9 +1,10 @@
-function Server(_serverUrl, _playerName, _startCallback, _playerJoinCallback, _playerUpdateCallback){
+function Server(_serverUrl, _playerName, _startCallback, _playerJoinCallback, _playerDisconnectCallback, _playerUpdateCallback){
 	this.serverUrl = _serverUrl;
 	this.playerName = _playerName;
 	this.startCallback = _startCallback; 
 	this.playerJoinCallback = _playerJoinCallback;
 	this.playerUpdateCallback = _playerUpdateCallback;
+	this.playerDisconnectCallback = _playerDisconnectCallback;
 	
 	this.socket = io.connect(this.serverUrl);
 	var thisServer = this;
@@ -15,11 +16,15 @@ function Server(_serverUrl, _playerName, _startCallback, _playerJoinCallback, _p
    		thisServer.serverJoinTime = data.time;
    		//save the diference between local time and server time
    		thisServer.serverDiffTime = new Date().getTime()-thisServer.serverJoinTime;
-   		thisServer.startCallback();
+   		thisServer.startCallback(data.players);
   	});
   	
   	this.socket.on('join', function(data) {
   		thisServer.playerJoinCallback(data);
+  	});
+  	
+  	this.socket.on('disconnect', function(data) {
+  		thisServer.playerDisconnectCallback(data);
   	});
   	
   	this.socket.on('update', function(data) {
