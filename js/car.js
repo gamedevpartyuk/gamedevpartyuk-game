@@ -171,9 +171,9 @@ function Car(params){
       this.wheels.push(new Wheel(wheeldef));
   }
 
-  this.currentspriteset = ['carRotate01', 'carRotate02', 'carRotate03', 'carRotate04', 'carRotate05', 'carRotate06', 'carRotate07', 
-    'carRotate08', 'carRotate09', 'carRotate10', 'carRotate11', 'carRotate12', 'carRotate13', 'carRotate14', 
-    'carRotate15', 'carRotate16' ];
+  this.currentspriteset = ['carRotate09', 'carRotate10', 'carRotate11', 'carRotate12', 'carRotate13', 'carRotate14', 
+    'carRotate15', 'carRotate16', 'carRotate01', 'carRotate02', 'carRotate03', 'carRotate04', 'carRotate05', 'carRotate06', 'carRotate07', 
+    'carRotate08' ];
 
   // game itself
   this.game = params.game;
@@ -251,29 +251,32 @@ Car.prototype.draw = function(params){
   // there must be a way to turn this into an equation...
   var pos = 0;
 
-  if( a > -1*Math.PI/8 && a < 0*Math.PI/8) pos = 0;
-  else if( a > 0*Math.PI/8 && a < 1*Math.PI/8) pos = 1;
+  a += Math.PI + Math.PI/16;
+  pos =   Math.floor( (a/(2*Math.PI)) * this.currentspriteset.length ) % this.currentspriteset.length;
 
-  else if( a >= 1*Math.PI/8 && a < 2*Math.PI/8) pos = 2;
-  else if( a >= 2*Math.PI/8 && a < 3*Math.PI/8) pos = 3;
+  // if( a > -1*Math.PI/8 && a < 0*Math.PI/8) pos = 0;
+  // else if( a > 0*Math.PI/8 && a < 1*Math.PI/8) pos = 1;
 
-  else if( a >= 3*Math.PI/8 && a < 4*Math.PI/8) pos = 4;
-  else if( a >= 4*Math.PI/8 && a < 5*Math.PI/8) pos = 5;
+  // else if( a >= 1*Math.PI/8 && a < 2*Math.PI/8) pos = 2;
+  // else if( a >= 2*Math.PI/8 && a < 3*Math.PI/8) pos = 3;
 
-  else if( a >= 5*Math.PI/8 && a < 6*Math.PI/8) pos = 6;
-  else if( a >= 6*Math.PI/8 && a < 7*Math.PI/8) pos = 7;
+  // else if( a >= 3*Math.PI/8 && a < 4*Math.PI/8) pos = 4;
+  // else if( a >= 4*Math.PI/8 && a < 5*Math.PI/8) pos = 5;
 
-  else if( a >= 7*Math.PI/8 && a < 8*Math.PI/8) pos = 8;
-  else if( a < -7*Math.PI/8 && a < 0) pos = 9;
+  // else if( a >= 5*Math.PI/8 && a < 6*Math.PI/8) pos = 6;
+  // else if( a >= 6*Math.PI/8 && a < 7*Math.PI/8) pos = 7;
 
-  else if( a < -6*Math.PI/8 && a >= -7*Math.PI/8) pos = 10;
-  else if( a < -5*Math.PI/8 && a >= -6*Math.PI/8) pos = 11;
+  // else if( a >= 7*Math.PI/8 && a < 8*Math.PI/8) pos = 8;
+  // else if( a < -7*Math.PI/8 && a < 0) pos = 9;
 
-  else if( a < -4*Math.PI/8 && a >= -5*Math.PI/8) pos = 12;
-  else if( a < -3*Math.PI/8 && a >= -4*Math.PI/8) pos = 13;
+  // else if( a < -6*Math.PI/8 && a >= -7*Math.PI/8) pos = 10;
+  // else if( a < -5*Math.PI/8 && a >= -6*Math.PI/8) pos = 11;
 
-  else if( a < -2*Math.PI/8 && a >= -3*Math.PI/8) pos = 14;
-  else if( a < -1*Math.PI/8 && a >= -2*Math.PI/8) pos = 15;
+  // else if( a < -4*Math.PI/8 && a >= -5*Math.PI/8) pos = 12;
+  // else if( a < -3*Math.PI/8 && a >= -4*Math.PI/8) pos = 13;
+
+  // else if( a < -2*Math.PI/8 && a >= -3*Math.PI/8) pos = 14;
+  // else if( a < -1*Math.PI/8 && a >= -2*Math.PI/8) pos = 15;
 
 
 
@@ -351,9 +354,9 @@ Car.prototype.update = function(msDuration, world){
         var incr=(this.max_steer_angle/500) * msDuration;
         
         if(this.movement & MOVE_RIGHT ){
-            this.wheel_angle=Math.min(this.wheel_angle+incr, this.max_steer_angle); //increment angle without going over max steer
+            this.wheel_angle=Math.min(this.wheel_angle+incr*2, this.max_steer_angle); //increment angle without going over max steer
         }else if(this.movement & MOVE_LEFT){
-            this.wheel_angle=Math.max(this.wheel_angle-incr, -this.max_steer_angle); //decrement angle without going over max steer
+            this.wheel_angle=Math.max(this.wheel_angle-incr*2, -this.max_steer_angle); //decrement angle without going over max steer
         }else{
           // if left/right is not pressed, gradually stabilize wheels
             if( this.wheel_angle<0 ) this.wheel_angle=Math.min(this.wheel_angle+incr, 0)
@@ -370,7 +373,7 @@ Car.prototype.update = function(msDuration, world){
         if(this.movement & MOVE_UP) {
           force = -SCALE;
         } else if(this.movement & MOVE_DOWN) {
-          force = SCALE;
+          force = SCALE/2;
         }
 
         var velocity=this.body.GetLinearVelocity(); // velocity vector
