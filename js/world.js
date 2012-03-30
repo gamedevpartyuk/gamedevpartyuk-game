@@ -113,11 +113,17 @@ World.prototype.newRectangleBody = function (params) {
 	if( this.engine == BOX2D ) {
 	  var fixDef = new b2FixtureDef;
 	  fixDef.density = 1.0;
-	  fixDef.friction = 0.5;
-	  fixDef.restitution = 0.2;
+	  if( params.friction ) {
+			fixDef.friction = params.friction;
+	  } else {
+		 fixDef.friction = 0.5;
+	 }
+	  
+	  fixDef.restitution = 0.4;
 	  var bodyDef = new b2BodyDef;
-	  bodyDef.linearDamping = 16;  // -/these simulates floor friction, otherwise objects behave like in space
-	  bodyDef.angularDamping = 16; // /
+	  bodyDef.linearDamping = 2;  // -/these simulates floor friction, otherwise objects behave like in space
+	  bodyDef.angularDamping = 2; // /
+		bodyDef.bullet = true;
 
 	  if( params.weight) {
 	    // bodyDef.linearDamping += this.weight/10;
