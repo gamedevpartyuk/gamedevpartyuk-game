@@ -558,6 +558,9 @@ Game.prototype.update = function() {
 
   } // if not pause
   
+  //notify the server about the update
+  this.sendCarDetails(this.usercontrolled[this.controllingEntity]);
+  
   // request next update
   setTimeout( this.boundupdate, this.updateDelay );
 }; // update()
@@ -833,7 +836,7 @@ Game.prototype.toggledebug = function() {
 // -------------------------------------------------------------------------------
 
 Game.prototype.connectToServer = function(){
-	this.server = new Server(null,'player',
+this.server = new Server(null,'player',
 	
 	(function(){
 		console.log('connected to server');
@@ -864,7 +867,20 @@ Game.prototype.connectToServer = function(){
 	
 	(function(data){
 		var playerId = data.player;
-		var car = this.players[playerId]
-	}).bind(this));
+		var car = this.players[playerId];
+		
+		if(car){
+			car.body.SetPositionAndAngle(data.pos,data.angle);
+		}
+		
+	}).bind(this)
+);
 };
 
+Game.prototype.sendCarDetails = function(car){
+	this.server.update({
+		pos: car.body.GetPosition(),
+		power: car.power,
+		angle: car.angle
+	});
+}
