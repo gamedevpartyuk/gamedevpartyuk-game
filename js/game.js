@@ -1092,7 +1092,13 @@ this.server = new Server(null,'player',
 		var car = this.players[playerId];
 		
 		if(car){
-			car.body.SetPositionAndAngle(data.pos,data.angle);
+      if(typeof data.angle != 'undefined') this.myworld.setangle(car.body, data.angle);
+			if(typeof data.pos != 'undefined') car.body.SetPosition(data.pos);
+      if(typeof data.force != 'undefined') { car.body.m_force.x = data.force.x; car.body.m_force.y = data.force.y; }
+      if(typeof data.torque != 'undefined') car.body.m_torque = data.torque;
+      if(typeof data.movement != 'undefined') car.movement = data.movement;
+      car.body.SetAwake(true);
+      car.power = data.power;
 		}
 		
 	}).bind(this)
@@ -1102,11 +1108,19 @@ this.server = new Server(null,'player',
 Game.prototype.sendCarDetails = function(car){
 	var now = new Date().getTime();
 	if(now - this.lastServerUpdate > 100){ //don't update more often than a threashold
-		this.server.update({
-			pos: car.body.GetPosition(),
-			power: car.power,
-			angle: car.angle
-		});
+    var data = {
+      pos: car.body.GetPosition(),
+      power: car.power,
+      angle: this.myworld.getangle(car.body),
+      movement: car.movement
+    };
+    if( car.body.m_force ) {
+      data.force = { x:car.body.m_force.x, y:car.body.m_force.y };
+    }
+    if( car.body.m_torque ) {
+      data.torque = car.body.m_torque;
+    }
+		this.server.update(data);
 		this.lastServerUpdate = now;
 	}
 }
