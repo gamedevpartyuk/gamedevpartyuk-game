@@ -139,6 +139,7 @@ Wheel.prototype.draw = function(params) {
 //          y is wheel position in meters relative to car body center
 //          revolving - boolean, does this turn rotate when steering?
 //          powered - is force applied to this wheel when accelerating/braking?
+// cartype - currently 0 (red), 1 (white)
 //
 function Car(params){
 
@@ -158,6 +159,8 @@ function Car(params){
 
   this.angle = params.angle;
 
+  this.cartype = params.cartype;
+
   //initialize wheels
   this.wheels=[]
   var wheeldef, i;
@@ -172,8 +175,14 @@ function Car(params){
       this.wheels.push(new Wheel(wheeldef));
   }
 
-   this.currentspriteset = ["carRotate0016","carRotate0017", "carRotate0018", "carRotate0019", "carRotate0020", "carRotate0021", "carRotate0022", "carRotate0023", "carRotate0024", "carRotate0025", "carRotate0026", "carRotate0027", "carRotate0028", "carRotate0029", "carRotate0030", "carRotate0031", "carRotate0032","carRotate0000", "carRotate0001", "carRotate0002", "carRotate0003", "carRotate0004", "carRotate0005", "carRotate0006", "carRotate0007", "carRotate0008", "carRotate0009", "carRotate0010", "carRotate0011", "carRotate0012", "carRotate0013", "carRotate0014", "carRotate0015"];
-
+  // we should make this external
+  if( typeof params.cartype != 'undefined' && params.cartype == 1 ) {
+    this.currentspriteset = ["mercRotate0016","mercRotate0017", "mercRotate0018", "mercRotate0019", "mercRotate0020", "mercRotate0021", "mercRotate0022", "mercRotate0023", "mercRotate0024", "mercRotate0025", "mercRotate0026", "mercRotate0027", "mercRotate0028", "mercRotate0029", "mercRotate0030", "mercRotate0031", "mercRotate0031", "mercRotate0000", "mercRotate0001", "mercRotate0002", "mercRotate0003", "mercRotate0004", "mercRotate0005", "mercRotate0006", "mercRotate0007", "mercRotate0008", "mercRotate0009", "mercRotate0010", "mercRotate0011", "mercRotate0012", "mercRotate0013", "mercRotate0014", "mercRotate0015"];
+  } else {
+    this.currentspriteset = ["carRotate0016","carRotate0017", "carRotate0018", "carRotate0019", "carRotate0020", "carRotate0021", "carRotate0022", "carRotate0023", "carRotate0024", "carRotate0025", "carRotate0026", "carRotate0027", "carRotate0028", "carRotate0029", "carRotate0030", "carRotate0031", "carRotate0032","carRotate0000", "carRotate0001", "carRotate0002", "carRotate0003", "carRotate0004", "carRotate0005", "carRotate0006", "carRotate0007", "carRotate0008", "carRotate0009", "carRotate0010", "carRotate0011", "carRotate0012", "carRotate0013", "carRotate0014", "carRotate0015"];  
+    this.cartype = 0;
+  }
+  
   // game itself
   this.game = params.game;
 }
