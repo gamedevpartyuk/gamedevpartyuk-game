@@ -23,39 +23,37 @@ function handler (req, res) {
   });
 }
 
-function createPlayer(id,name) {
-	var player = new Object();
-	player.id = id;
-	player.name = name;
-	return player;
-}
-
-
 var players = new Object();
 
 io.sockets.on('connection', function (socket) {
 
   socket.on('join', function (data) {	
     console.log(data);
-    var player = createPlayer(socket.id,data.name);
-    socket.emit('start',{time:new Date().getTime(),players:players});
-    players[player.id] = player;
-    socket.broadcast.emit('join',{name:player.name,id:socket.id});
+    data.time = new Date().getTime();
+    data.id = socket.id;
+    // send to user that just joined all data from other players
+    socket.emit('start', { time:new Date().getTime(), players:players });
+    // add new player
+    players[socket.id] = data;
+    // notify others of joined player
+    socket.broadcast.emit('join', data );
   });
-
   
-  socket.on('disconnect', function () {   
-    socket.broadcast.emit('disconnect',{player:socket.id});
+  socket.on('disconnect', function () {
+    // notify others of disconnected player
+    socket.broadcast.emit('disconnect', { player:socket.id, time: new Date().getTime() });
+    // remove it from status
     delete players[socket.id];
   });
 
 
   socket.on('update', function (data) {	    
-    var player = players[socket.id];
-	console.log(player.name + " moved");
-	data.player = socket.id;
-	data.time = new Date().getTime();
-	socket.broadcast.emit('update',data);
+    players[socket.id] = data;
+    data.id = socket.id;
+    data.time = new Date().getTime();
+  	console.log(data.name + " moved");
+    // notify others of this user's movement
+  	socket.broadcast.emit('update', data);
   });
 	
   	

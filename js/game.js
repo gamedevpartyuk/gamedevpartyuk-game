@@ -354,6 +354,7 @@ Game.prototype.init_phase_two = function() {
                   'game': this,
                   'lapNumber': 0,
                   'id': parseInt(Math.random() * 10),
+                  'cartype': (Math.random() < 0.5) ? 0 : 1,
                   'wheels':[{'x':-0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top left
                               {'x':0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top right
                               {'x':-0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false}, //back left
@@ -963,9 +964,10 @@ Game.prototype.render = function() {
   this.ctx.fillText(this.entities.length, 25, 35);
   this.ctx.fillText(this.action, 26, 62);
   this.ctx.fillText(this.log, 25, 76);
-  if( this.mouseX && this.mouseY ) {
-    this.ctx.fillText(this.mouseX.toFixed(2) + "-" + this.mouseY.toFixed(2), 25, 50);
-  }
+  this.ctx.fillText('id: ' + this.usercontrolled[this.controllingEntity].id, 25, 50);
+  // if( this.mouseX && this.mouseY ) {
+  //   this.ctx.fillText(this.mouseX.toFixed(2) + "-" + this.mouseY.toFixed(2), 25, 50);
+  // }
   
   //Draw the controls LoL
   if(this.isMobile) {
@@ -1032,27 +1034,42 @@ Game.prototype.toggledebug = function() {
 }
 
 // -------------------------------------------------------------------------------
-Game.prototype.addPlayerCar = function(playerId){
+Game.prototype.addPlayerCar = function(data){
 	//console.log('adding car for '+playerId);
 	var car_width = 14 / SCALE; /* sprites are 64 pixels but car is actually smaller */
 	var car_height = 32 / SCALE;
-	var car = new Car({'width': car_width,
-				  'height': car_height,
-				  'x': this.map_width/2,
-				  'y': this.map_height/2,
-				  'angle':Math.PI, 
-				  'power':60,
-				  'max_steer_angle':15,
-				  'max_speed':60,
-				  'game': this,
-				  'wheels':[{'x':-0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top left
-							  {'x':0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top right
-							  {'x':-0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false}, //back left
-							  {'x':0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false}]}); //back right
-	  this.players[playerId] = car;       
-	  this.entities.push( car );
-	  car.createbody(this.myworld);
-	  //console.log(this.players);
+
+  var cardef = {};
+  cardef.width = ( typeof data != 'undefined' && typeof data.height != 'undefined' ) ? data.width : car_width;
+  cardef.height = ( typeof data != 'undefined' && typeof data.height != 'undefined' ) ? data.height : car_height;
+  cardef.x = ( typeof data != 'undefined' && typeof data.x != 'undefined' ) ? data.x : this.map_width/2;
+  cardef.y = ( typeof data != 'undefined' && typeof data.y != 'undefined' ) ? data.y : this.map_height/2;
+  cardef.angle = ( typeof data != 'undefined' && typeof data.angle != 'undefined' ) ? data.angle : Math.PI;
+  cardef.power = ( typeof data != 'undefined' && typeof data.power != 'undefined' ) ? data.power : 60;
+  cardef.max_steer_angle = ( typeof data != 'undefined' && typeof data.max_steer_angle != 'undefined' ) ? data.max_steer_angle : 15;
+  cardef.max_speed = ( typeof data != 'undefined' && typeof data.max_speed != 'undefined' ) ? data.max_speed : 60;
+  cardef.game = this;
+  cardef.cartype = ( typeof data != 'undefined' && typeof data.cartype != 'undefined' ) ? data.cartype : (Math.random() < 0.5 ? 0 : 1);
+  if( typeof data != 'undefined' && typeof cardef.wheels != 'undefined' ) {
+    cardef.wheels = [];
+    for(var w in data.wheels) {
+      var wheel = data.wheels[w];
+      cardef.wheels.push({x:wheel.x, y:wheel.y, width:wheel.width, height:wheel.height, revolving:wheel.revolving, powered:wheel.powered});
+    }
+  } else {
+    cardef.wheels = [
+                  {'x':-0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top left
+                  {'x':0.3*car_width, 'y':-0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':true, 'powered':true}, //top right
+                  {'x':-0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false}, //back left
+                  {'x':0.3*car_width, 'y':0.3*car_height, 'width':0.1, 'height':0.2, 'revolving':false, 'powered':false} //back right
+                ]; 
+  }
+
+	var car = new Car(cardef);
+  this.players[data.id] = car;       
+  this.entities.push( car );
+  car.createbody(this.myworld);
+  //console.log(this.players);
 }
 
 Game.prototype.removePlayerCar = function(playerId){
@@ -1065,62 +1082,99 @@ Game.prototype.removePlayerCar = function(playerId){
 }
 
 Game.prototype.connectToServer = function(){
-this.server = new Server(null,'player',
+  this.server = new Server(null, 'player',
 	
-	(function(players){
-		//console.log('connected to server');
-		this.players = {};
-		this. lastServerUpdate = 0;
-		
-		for(var p in players){
-			if(players.hasOwnProperty(p)){
-				this.addPlayerCar(players[p].id);	
-			}
-		}
-	}).bind(this),
-	
-	(function(data){	
-		this.addPlayerCar(data.id);
-	}).bind(this),
-	
-	(function(data){
-		this.removePlayerCar(data.player);
-	}).bind(this),
-	
-	(function(data){
-		var playerId = data.player;
-		var car = this.players[playerId];
-		
-		if(car){
-      if(typeof data.angle != 'undefined') this.myworld.setangle(car.body, data.angle);
-			if(typeof data.pos != 'undefined') car.body.SetPosition(data.pos);
-      if(typeof data.force != 'undefined') { car.body.m_force.x = data.force.x; car.body.m_force.y = data.force.y; }
-      if(typeof data.torque != 'undefined') car.body.m_torque = data.torque;
-      if(typeof data.movement != 'undefined') car.movement = data.movement;
-      car.body.SetAwake(true);
-      car.power = data.power;
-		}
-		
-	}).bind(this)
-);
+    // this client connects
+  	(function(players){
+  		//console.log('connected to server');
+  		this.players = {};
+  		this.lastServerUpdate = 0;
+      this.lastDataSent = undefined;
+  		
+  		for(var p in players){
+  			if(players.hasOwnProperty(p)){
+  				this.addPlayerCar(players[p]);	
+  			}
+  		}
+  	}).bind(this),
+  	
+    // someone joins
+  	(function(data){	
+  		// this.addPlayerCar(data.id, data.data);
+  	}).bind(this),
+  	
+    // someone disconnects
+  	(function(data){
+  		this.removePlayerCar(data.player);
+  	}).bind(this),
+  	
+    // someone sends an update
+  	(function(data){
+  		var car = this.players[data.id];
+  		if(car){
+        if(typeof data.angle != 'undefined') this.myworld.setangle(car.body, data.angle);
+  			if(typeof data.pos != 'undefined') car.body.SetPosition(data.pos);
+        if(typeof data.force != 'undefined') { car.body.m_force.x = data.force.x; car.body.m_force.y = data.force.y; }
+        if(typeof data.torque != 'undefined') car.body.m_torque = data.torque;
+        if(typeof data.movement != 'undefined') car.movement = data.movement;
+        car.body.SetAwake(true);
+        car.power = data.power;
+  		} else {
+        // new player
+        this.addPlayerCar(data);
+      }
+  		
+  	}).bind(this)
+  );
 };
 
 Game.prototype.sendCarDetails = function(car){
 	var now = new Date().getTime();
-	if(now - this.lastServerUpdate > 100){ //don't update more often than a threashold
+	if(now - this.lastServerUpdate > 100 || typeof this.lastDataSent == 'undefined' ){ //don't update more often than a threashold
+
+    // send everything
     var data = {
       pos: car.body.GetPosition(),
       power: car.power,
       angle: this.myworld.getangle(car.body),
-      movement: car.movement
+      movement: car.movement,
+      width: car.width,
+      height: car.height,
+      max_steer_angle: car.max_steer_angle,
+      max_speed: car.max_speed,
+      cartype: car.cartype,
+      name: car.id,
     };
-    if( car.body.m_force ) {
+    if( typeof car.body.m_force != 'undefined' && car.body.m_force ) {
       data.force = { x:car.body.m_force.x, y:car.body.m_force.y };
     }
-    if( car.body.m_torque ) {
+    if( typeof car.body.m_torque != 'undefined' && car.body.m_torque ) {
       data.torque = car.body.m_torque;
     }
+
+    // unless it's not moved
+    if( typeof this.lastDataSent != 'undefined' ) {
+      if( this.lastDataSent.pos.x == data.pos.x &&
+          this.lastDataSent.pos.y == data.pos.y &&
+          this.lastDataSent.power == data.power &&
+          this.lastDataSent.angle == data.angle &&
+          this.lastDataSent.torque == data.torque &&
+          this.lastDataSent.force.x == data.force.x &&
+          this.lastDataSent.force.y == data.force.y &&
+          this.lastDataSent.movement == data.movement ) {
+        return; // nothing changed since last sent
+      }
+    }
+
+    // additional data to send, here to avoid doing it unnecessarily
+    data.wheels = [];
+    for(var w in car.wheels) {
+      var wheel = car.wheels[w];
+      data.wheels.push({x:wheel.x, y:wheel.y, width:wheel.width, height:wheel.height, revolving:wheel.revolving, powered:wheel.powered});
+    }
+
 		this.server.update(data);
 		this.lastServerUpdate = now;
+    this.lastDataSent = data;
 	}
 }
