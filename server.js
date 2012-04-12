@@ -2,7 +2,7 @@ var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
   , fs = require('fs')
 
-app.listen(8080);
+app.listen(8888);
 
 function handler (req, res) {
   var url = req.url;
@@ -18,7 +18,12 @@ function handler (req, res) {
       return res.end('Error loading index.html');
     }
 
-    res.writeHead(200);
+    if(url.substr(-9) == ".appcache") {
+      res.writeHead(200, { 'Content-Type': 'text/cache-manifest' });
+    } 
+    else {
+      res.writeHead(200);
+    }
     res.end(data);
   });
 }
