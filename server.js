@@ -21,6 +21,10 @@ function handler (req, res) {
     if(url.substr(-9) == ".appcache") {
       res.writeHead(200, { 'Content-Type': 'text/cache-manifest' });
     } 
+    else if(url == "/manifest.json") {
+      console.log('Someone asking for the app manifest');
+      res.writeHead(200, { 'Content-Type': 'application/x-web-app-manifest+json;' });
+    } 
     else {
       res.writeHead(200);
     }

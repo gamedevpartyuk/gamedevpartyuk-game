@@ -1,9 +1,9 @@
 {
-  "version": "1.0",
   "name": "Run Run",
+  "version": "1.0",
   "description": "Multiplayer Race Game!",
   "icons": {
-    "64": "/img/icon-64.png",
+    "64": "/img/icon-64.png"
   },
   "developer": {
     "name": "O2 Labs + Telefonica PDI"
@@ -13,7 +13,7 @@
   ],
   "locales": {
     "es": {
-      "description": "A correr, a correr a ver si me ganas!",
+      "description": "A correr, a correr a ver si me ganas!"
     }
   },
   "default_locale": "en"
