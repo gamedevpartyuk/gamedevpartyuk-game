@@ -6,8 +6,7 @@
     "64": "/img/icon-64.png",
   },
   "developer": {
-    "name": "O2 Labs + Telefonica PID",
-    "url": "http://openwebdevice.com/"
+    "name": "O2 Labs + Telefonica PDI"
   },
   "installs_allowed_from": [
     "*"
